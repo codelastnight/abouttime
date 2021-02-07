@@ -52,6 +52,7 @@ export var init = (): matterPhysics  => {
     MouseConstraint = Matter.MouseConstraint,
     Mouse = Matter.Mouse,
     World = Matter.World,
+    Common = Matter.Common,
     Bodies = Matter.Bodies;
 
 // create engine
@@ -132,7 +133,29 @@ render.mouse = mouse;
 //     min: { x: 0, y: 0 },
 //     max: { x: 800, y: 600 }
 // });
+ // add gyro control
+ if (typeof window !== 'undefined') {
+    var updateGravity = function(event: DeviceOrientationEvent) {
+        var orientation = typeof window.orientation !== 'undefined' ? window.orientation : 0,
+            gravity = engine.world.gravity;
 
+        if (orientation === 0) {
+            gravity.x = Common.clamp(event.gamma, -90, 90) / 90;
+            gravity.y = Common.clamp(event.beta, -90, 90) / 90;
+        } else if (orientation === 180) {
+            gravity.x = Common.clamp(event.gamma, -90, 90) / 90;
+            gravity.y = Common.clamp(-event.beta, -90, 90) / 90;
+        } else if (orientation === 90) {
+            gravity.x = Common.clamp(event.beta, -90, 90) / 90;
+            gravity.y = Common.clamp(-event.gamma, -90, 90) / 90;
+        } else if (orientation === -90) {
+            gravity.x = Common.clamp(-event.beta, -90, 90) / 90;
+            gravity.y = Common.clamp(event.gamma, -90, 90) / 90;
+        }
+    };
+
+    window.addEventListener('deviceorientation', updateGravity);
+}
 // context for MatterTools.Demo
 return {
     engine: engine,
