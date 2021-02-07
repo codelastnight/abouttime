@@ -134,23 +134,25 @@ render.mouse = mouse;
 //     max: { x: 800, y: 600 }
 // });
  // add gyro control
+ var clamp = 90
+ var scale = 45
  if (typeof window !== 'undefined') {
     var updateGravity = function(event: DeviceOrientationEvent) {
         var orientation = typeof window.orientation !== 'undefined' ? window.orientation : 0,
             gravity = engine.world.gravity;
 
         if (orientation === 0) {
-            gravity.x = Common.clamp(event.gamma, -90, 90) / 90;
-            gravity.y = Common.clamp(event.beta, -90, 90) / 90;
+            gravity.x = Common.clamp(event.gamma, -clamp, clamp) / scale;
+            gravity.y = Common.clamp(event.beta, -clamp, clamp) / scale;
         } else if (orientation === 180) {
-            gravity.x = Common.clamp(event.gamma, -90, 90) / 90;
-            gravity.y = Common.clamp(-event.beta, -90, 90) / 90;
+            gravity.x = Common.clamp(event.gamma, -clamp, clamp) / scale;
+            gravity.y = Common.clamp(-event.beta, -clamp, clamp) / scale;
         } else if (orientation === 90) {
-            gravity.x = Common.clamp(event.beta, -90, 90) / 90;
-            gravity.y = Common.clamp(-event.gamma, -90, 90) / 90;
+            gravity.x = Common.clamp(event.beta, -clamp, clamp) / scale;
+            gravity.y = Common.clamp(-event.gamma, -clamp, clamp) / scale;
         } else if (orientation === -90) {
-            gravity.x = Common.clamp(-event.beta, -90, 90) / 90;
-            gravity.y = Common.clamp(event.gamma, -90, 90) / 90;
+            gravity.x = Common.clamp(-event.beta, -clamp, clamp) / scale;
+            gravity.y = Common.clamp(event.gamma, -clamp, clamp) / scale;
         }
     };
 
