@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/codelastnight/abouttime#readme",
   "devDependencies": {
+    "@types/matter-js": "^0.14.10",
     "css-loader": "^5.0.1",
     "html-webpack-plugin": "^5.0.0",
     "sass": "^1.32.6",
@@ -29,6 +30,7 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
-    "matter-js": "^0.16.1"
+    "matter-js": "^0.16.1",
+    "normalize.css": "^8.0.1"
   }
 }

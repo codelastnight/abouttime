@@ -12,10 +12,16 @@ module.exports = {
 
     // output bundles (location)
     output: {
-        path: path.resolve( __dirname, 'dist' ),
+        path: path.resolve( __dirname, 'root' ),
         filename: 'main.js',
     },
-    plugins: [new HtmlWebpackPlugin()],
+    plugins: [new HtmlWebpackPlugin({
+        template: './src/index.html',
+      inject: true,
+      filename: 'index.html'
+    }
+        
+    )],
 
     // file resolutions
     resolve: {
