@@ -12,7 +12,7 @@ module.exports = {
 
     // output bundles (location)
     output: {
-        path: path.resolve( __dirname, 'root' ),
+        path: path.resolve( __dirname, 'docs' ),
         filename: 'main.js',
     },
     plugins: [new HtmlWebpackPlugin({
