@@ -1,9 +1,15 @@
+/*
+    author: Simon Zhang
+    Winter 2021
+*/ 
+
+
 import * as Matter from 'matter-js';
 
 
-var width = window.innerWidth
-var height = window.innerHeight
-var border = 50
+export var width = window.innerWidth
+export var height = window.innerHeight
+export var border = 50
 
 interface matterPhysics {
     engine: Matter.Engine,
@@ -14,7 +20,10 @@ interface matterPhysics {
 
 }
 
-export function create(x: number,y: number){
+export function createMin(){
+    
+    var x = Common.random(relX(10), relX(90))
+    var y = Common.random(relY(5), relY(10))
     var Common = Matter.Common,
         Bodies = Matter.Bodies
 
@@ -31,18 +40,42 @@ export function create(x: number,y: number){
         };
     }
 
-    switch (Math.round(Common.random(0, 1))) {
+    switch (Math.round(Common.random(0, 2))) {
     case 0:
         if (Common.random() < 0.8) {
             return Bodies.rectangle(x, y, Common.random(25, 50), Common.random(25, 50), { chamfer: chamfer });
         } else {
             return Bodies.rectangle(x, y, Common.random(80, 120), Common.random(25, 30), { chamfer: chamfer });
         }
+        
     case 1:
+    case 2:
         return Bodies.polygon(x, y, sides, Common.random(25, 50), { chamfer: chamfer });
     }
 }
 
+export function createHr(time: number) {
+    var x = Common.random(relX(10), relX(90))
+    var y = Common.random(relY(5), relY(10))
+    var Common = Matter.Common,
+        Bodies = Matter.Bodies
+
+    var sides = Math.round(Common.random(1, time));
+
+    // triangles can be a little unstable, so avoid until fixed
+    sides = (sides === 3) ? 4 : sides;
+
+    // round the edges of some bodies
+    var chamfer = null;
+    if (sides > 2 && Common.random() > 0.7) {
+        chamfer = {
+            radius: 10
+        };
+    }
+
+    return Bodies.polygon(x, y, sides, Common.random(relX(20), relX(23)), { chamfer: chamfer });
+    
+}
 
 export var init = (): matterPhysics  => {
     var Engine = Matter.Engine,
@@ -94,17 +127,11 @@ Render.setPixelRatio(render, 'auto')
 var runner = Runner.create();
 Runner.run(runner, engine);
 
-// add bodies
-var stack = Composites.stack(20, 20, 10, 5, 0, 0, function(x:number, y:number) {
-  return create(x,y);
-});
 
-World.add(world, stack);
 
 World.add(world, [
-    // walls
-    Bodies.rectangle(width/2, 0, width, border, { isStatic: true }),
-    Bodies.rectangle(width/2, height, width, border, { isStatic: true }),
+
+    //vertical walls
     Bodies.rectangle(width, height/2, border, height, { isStatic: true }),
     Bodies.rectangle(0, height/2, border, height, { isStatic: true })
 ]);
@@ -169,4 +196,13 @@ return {
         Matter.Runner.stop(runner);
     }
 };
+}
+
+
+export function relX(percent: number) {
+    return Math.round(percent/100 * window.innerWidth);
+  }
+
+export function relY(percent: number) {
+    return Math.round(percent/100 * window.innerHeight);
 }

@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "matter-js": "^0.16.1",
-    "normalize.css": "^8.0.1"
+    "normalize.css": "^8.0.1",
+    "poly-decomp": "^0.3.0"
   }
 }
