@@ -22,11 +22,11 @@ interface matterPhysics {
 
 export function createMin(){
     
-    var x = Common.random(relX(10), relX(90))
-    var y = Common.random(relY(5), relY(10))
     var Common = Matter.Common,
         Bodies = Matter.Bodies
 
+    var x = Common.random(relX(10), relX(90))
+    var y = Common.random(relY(5), relY(10))
     var sides = Math.round(Common.random(1, 8));
 
     // triangles can be a little unstable, so avoid until fixed
@@ -34,31 +34,34 @@ export function createMin(){
 
     // round the edges of some bodies
     var chamfer = null;
-    if (sides > 2 && Common.random() > 0.7) {
-        chamfer = {
-            radius: 10
-        };
-    }
+    // if (sides > 2 && Common.random() > 0.7) {
+    //     chamfer = {
+    //         radius: 10
+    //     };
+    // }
+    return Bodies.polygon(x, y, sides, Common.random(relX(2), relX(3)), { chamfer: chamfer });
 
-    switch (Math.round(Common.random(0, 2))) {
-    case 0:
-        if (Common.random() < 0.8) {
-            return Bodies.rectangle(x, y, Common.random(25, 50), Common.random(25, 50), { chamfer: chamfer });
-        } else {
-            return Bodies.rectangle(x, y, Common.random(80, 120), Common.random(25, 30), { chamfer: chamfer });
-        }
+    // switch (Math.round(Common.random(0, 2))) {
+    // case 0:
+    //     if (Common.random() < 0.8) {
+    //         return Bodies.rectangle(x, y, Common.random(5, 50), Common.random(25, 50), { chamfer: chamfer });
+    //     } else {
+    //         return Bodies.rectangle(x, y, Common.random(80, 120), Common.random(25, 30), { chamfer: chamfer });
+    //     }
         
-    case 1:
-    case 2:
-        return Bodies.polygon(x, y, sides, Common.random(25, 50), { chamfer: chamfer });
-    }
+    // case 1:
+    // case 2:
+    //     return Bodies.polygon(x, y, sides, Common.random(25, 50), { chamfer: chamfer });
+    // }
 }
 
 export function createHr(time: number) {
-    var x = Common.random(relX(10), relX(90))
-    var y = Common.random(relY(5), relY(10))
     var Common = Matter.Common,
         Bodies = Matter.Bodies
+
+    var x = Common.random(relX(20), relX(80))
+    var y = Common.random(relY(5), relY(10))
+
 
     var sides = Math.round(Common.random(1, time));
 
@@ -73,7 +76,7 @@ export function createHr(time: number) {
         };
     }
 
-    return Bodies.polygon(x, y, sides, Common.random(relX(20), relX(23)), { chamfer: chamfer });
+    return Bodies.polygon(x, y, sides, Common.random(relX(10), relX(11)), { chamfer: chamfer });
     
 }
 

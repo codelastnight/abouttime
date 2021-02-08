@@ -29,14 +29,14 @@ var state: state = {
     mins: [],
     hrsDif: 0,
     minsDif: 0,
-    hrCurrent: 0
+    hrCurrent: 1
 }
 
 
 function init() {
     var data = matterPhysics.init(),
         Body = Matter.Body,
-        duration = 300,
+        duration = 200,
         step = matterPhysics.height / duration,
         world = data.engine.world;
         
@@ -44,7 +44,6 @@ function init() {
     var BotWall = Matter.Bodies.rectangle(matterPhysics.width/2, matterPhysics.height, matterPhysics.width, matterPhysics.border, { isStatic: true })
 
     Matter.World.add(world, [
-
         //vertical walls
         TopWall,
         BotWall
@@ -82,35 +81,59 @@ function init() {
                 state.hrs = []
                 state.mins = []
             }
-        }
-        if (isMinuteChange) {
+            // if hr bodies needed, spawn them, and make sure the spawn happens after the clearing animation
+            if (state.hrsDif > 0 && hourCounter == 0) {
+                var newHr = matterPhysics.createHr(state.hrCurrent)
+                Matter.World.add(world,newHr)
+                state.hrs.push(newHr)
+                state.hrsDif -= 1
+            } else if(state.hrsDif < 0) {
+                var toRemove = state.hrs.pop()
+                Matter.World.remove(world, toRemove);
+                state.hrsDif += 1
 
+            }
         }
-        if (updateBodiesChange) {
-            matterPhysics.createHr(state.hrCurrent)
+
+        
+
+        // if min bodies needed, spawn them, and make sure the spawn happens after the clearing animation
+
+        if (state.minsDif > 0 && hourCounter == 0) {
+            var newMin = matterPhysics.createMin()
+            Matter.World.add(world,newMin)
+            state.mins.push(newMin)
+            state.minsDif -= 1
+        }else if(state.minsDif < 0) {
+            var toRemove = state.mins.pop()
+            Matter.World.remove(world, toRemove);
+            state.hrsDif += 1
+
         }
     })
 
 }
 
-init()
 
-let prevMins = 0;
-let prevHrs = 0;
-let clock = () => {
+let prevMins = 300;
+let prevHrs = 300;
+function clock () {
     let date = new Date();
     let hrs = date.getHours();
     let mins = date.getMinutes();
     let period = "AM"
     // run every minute
-    if (prevMins != mins ) {
-        console.log("a min has passed")
+    if (prevMins !== mins ) {
         state.minsDif = mins - state.mins.length
         isMinuteChange = true;
-
+        prevMins = mins
+        console.log(state)
     }
+
     // run every hour
-    if (prevHrs != hrs) {
+    if (prevHrs !== hrs) {
+        console.log("hr")
+        prevHrs = hrs
         if (hrs == 0) {
             hrs = 12;
           } else if (hrs >= 12) {
@@ -120,16 +143,17 @@ let clock = () => {
         state.hrsDif = hrs - state.hrs.length
         state.hrCurrent = hrs;
         isHourChange = true
+        console.log(state)
 
     }
-   
-    prevMins = mins
-    prevHrs = hrs
-    // check every 3 seconds
-    setTimeout(clock, 3000);
+    
   };
 
-function toggleHr() {
-    isHourChange = true;
-}
-toggleHr()
+
+init()
+
+
+var i = setInterval(clock, 3000)
+
+//toggleHr()
+
