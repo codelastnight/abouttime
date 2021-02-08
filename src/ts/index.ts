@@ -43,11 +43,16 @@ function init() {
     var TopWall = Matter.Bodies.rectangle(matterPhysics.width/2, 0, matterPhysics.width, matterPhysics.border, { isStatic: true })
     var BotWall = Matter.Bodies.rectangle(matterPhysics.width/2, matterPhysics.height, matterPhysics.width, matterPhysics.border, { isStatic: true })
 
+
+
     Matter.World.add(world, [
         //vertical walls
         TopWall,
         BotWall
     ]);
+
+
+
     // do animations
     Matter.Events.on(data.engine, 'beforeUpdate', function(event) {
         if (isHourChange) {
@@ -81,31 +86,36 @@ function init() {
                 state.hrs = []
                 state.mins = []
             }
-            // if hr bodies needed, spawn them, and make sure the spawn happens after the clearing animation
-            if (state.hrsDif > 0 && hourCounter == 0) {
-                var newHr = matterPhysics.createHr(state.hrCurrent)
-                Matter.World.add(world,newHr)
-                state.hrs.push(newHr)
-                state.hrsDif -= 1
-            } else if(state.hrsDif < 0) {
-                var toRemove = state.hrs.pop()
-                Matter.World.remove(world, toRemove);
-                state.hrsDif += 1
-
-            }
+            
         }
 
         
 
         // if min bodies needed, spawn them, and make sure the spawn happens after the clearing animation
 
-        if (state.minsDif > 0 && hourCounter == 0) {
-            var newMin = matterPhysics.createMin()
-            Matter.World.add(world,newMin)
-            state.mins.push(newMin)
-            state.minsDif -= 1
+        if (state.minsDif > 0) {
+            if ( hourCounter == 0 || hourCounter >= duration ) {
+                var newMin = matterPhysics.createMin()
+                Matter.World.add(world,newMin)
+                state.mins.push(newMin)
+                state.minsDif -= 1
+            }
+           
         }else if(state.minsDif < 0) {
             var toRemove = state.mins.pop()
+            Matter.World.remove(world, toRemove);
+            state.hrsDif += 1
+
+        }
+
+        // if hr bodies needed, spawn them, and make sure the spawn happens after the clearing animation
+        if (state.hrsDif > 0 && hourCounter == 0) {
+            var newHr = matterPhysics.createHr(state.hrCurrent)
+            Matter.World.add(world,newHr)
+            state.hrs.push(newHr)
+            state.hrsDif -= 1
+        } else if(state.hrsDif < 0) {
+            var toRemove = state.hrs.pop()
             Matter.World.remove(world, toRemove);
             state.hrsDif += 1
 
