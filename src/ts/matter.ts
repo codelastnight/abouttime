@@ -25,7 +25,7 @@ export function createMin(){
     var Common = Matter.Common,
         Bodies = Matter.Bodies
 
-    var x = Common.random(rel(10), rel(90))
+    var x = Common.random(rel(40), rel(140))
     var y = Common.random(rel(10), rel(20))
     var sides = Math.round(Common.random(1, 8));
 
@@ -176,7 +176,7 @@ render.mouse = mouse;
     var updateGravity = function(event: DeviceOrientationEvent) {
         var orientation = typeof window.orientation !== 'undefined' ? window.orientation : 0,
             gravity = engine.world.gravity;
-
+        
         if (orientation === 0) {
             gravity.x = Common.clamp(event.gamma, -clamp, clamp) / scale;
             gravity.y = Common.clamp(event.beta, -clamp, clamp) / scale;
