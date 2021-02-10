@@ -6,6 +6,18 @@
 
 import * as Matter from 'matter-js';
 
+var colors = [
+    "#dbf7ff",
+    "#c8edff",
+    "#d2cfff",
+    "#ffd6eb",
+    "#f1c7ff"
+]
+
+function getColor() {
+    return colors[Math.round(Matter.Common.random(1,5) - 1)]
+}
+
 
 export var width = window.innerWidth
 export var height = window.innerHeight
@@ -30,7 +42,7 @@ export function createMin(){
     var sides = Math.round(Common.random(1, 8));
 
     // triangles can be a little unstable, so avoid until fixed
-    sides = (sides === 3) ? 4 : sides;
+    //sides = (sides === 3) ? 4 : sides;
 
     // round the edges of some bodies
     var chamfer = null;
@@ -39,20 +51,14 @@ export function createMin(){
     //         radius: 10
     //     };
     // }
-    return Bodies.polygon(x, y, sides, Common.random(rel(2), rel(3)), { chamfer: chamfer });
+    return Bodies.polygon(x, y, sides, Common.random(rel(2), rel(3)), { 
+        chamfer: chamfer ,
+        render: {
+            fillStyle: getColor(),
+        } 
+    });
 
-    // switch (Math.round(Common.random(0, 2))) {
-    // case 0:
-    //     if (Common.random() < 0.8) {
-    //         return Bodies.rectangle(x, y, Common.random(5, 50), Common.random(25, 50), { chamfer: chamfer });
-    //     } else {
-    //         return Bodies.rectangle(x, y, Common.random(80, 120), Common.random(25, 30), { chamfer: chamfer });
-    //     }
-        
-    // case 1:
-    // case 2:
-    //     return Bodies.polygon(x, y, sides, Common.random(25, 50), { chamfer: chamfer });
-    // }
+   
 }
 
 export function createHr(time: number) {
@@ -63,10 +69,10 @@ export function createHr(time: number) {
     var y = rel(20)
 
 
-    var sides = Math.round(Common.random(1, time));
+    var sides = Math.round( time);
 
     // triangles can be a little unstable, so avoid until fixed
-    sides = (sides === 3) ? 4 : sides;
+    //sides = (sides === 3) ? 4 : sides;
 
     // round the edges of some bodies
     var chamfer = null;
@@ -79,10 +85,9 @@ export function createHr(time: number) {
     return Bodies.polygon(x, y, sides, Common.random(rel(10), rel(11)), { 
         chamfer: chamfer,  
          render: {
-            fillStyle: 'red',
-            strokeStyle: 'blue',
-            lineWidth: 3
-   } });
+            fillStyle: getColor(),
+        } 
+    });
     
 }
 
@@ -194,6 +199,8 @@ render.mouse = mouse;
 
     window.addEventListener('deviceorientation', updateGravity);
 }
+mouseConstraint.mouse.element.removeEventListener("mousewheel", mouseConstraint.mouse.mousewheel);
+mouseConstraint.mouse.element.removeEventListener("DOMMouseScroll", mouseConstraint.mouse.mousewheel);
 // context for MatterTools.Demo
 return {
     engine: engine,
