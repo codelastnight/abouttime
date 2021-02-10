@@ -50,7 +50,9 @@ function init() {
     let area = (mp.width - mp.border*2) * (mp.height - mp.border*2) 
 
     // how many smalls in an hour
-    state.minsMax = Math.round((area / (3*mp.rel(5)**2) )* 0.5)
+    var smallsArea= (3*(mp.rel(5)**2))
+    var largeArea = state.hrCurrent*3*(mp.rel(11)**2)
+    state.minsMax = Math.round((area - largeArea) / smallsArea )
 
     Matter.World.add(world, [
         //vertical walls
@@ -166,7 +168,9 @@ function triggerMins(mins: number, secs:number) {
 
     state.hrsDif = state.hrCurrent - state.hrs.length
     console.log(state)
-}
+};
+
+(window as any).appState = state;
 
 function clock () {
     let date = new Date();
@@ -210,7 +214,7 @@ var messages = [
     ""
 ]
 
-var i = setInterval(clock, 500)
+var i = setInterval(clock, 600)
 
 function sleep(ms:number) {
     return new Promise(resolve => setTimeout(resolve, ms));

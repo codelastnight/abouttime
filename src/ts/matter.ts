@@ -27,6 +27,10 @@ function getColor() {
 
 export var width = window.innerWidth
 export var height = window.innerHeight
+
+//export var height = window.visualViewport !== null ?  window.visualViewport.height : window.innerHeight
+
+
 export var border = 50
 
 interface matterPhysics {
@@ -76,7 +80,7 @@ export function createHr(time: number) {
 
     var chamfer = null;
 
-    return Bodies.polygon(x, y, sides, Common.random(rel(10), rel(11)), { 
+    return Bodies.polygon(x, y, sides, rel(14), { 
         chamfer: chamfer,  
          render: {
             fillStyle: getColor(),
@@ -163,13 +167,16 @@ var mouse = Mouse.create(render.canvas),
 
 World.add(world, mouseConstraint);
 
+//mouse.pixelRatio = 1;
 // keep the mouse in sync with rendering
 //@ts-ignore
 render.mouse = mouse;
+
+
 // // fit the render viewport to the scene
 // Render.lookAt(render, {
 //     min: { x: 0, y: 0 },
-//     max: { x: 800, y: 600 }
+//     max: { x: width, y: height}
 // });
 //  // add gyro control
 //  var clamp = 90
@@ -217,7 +224,7 @@ return {
 
 
 export function rel(percent: number) {
-    let length = (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth)
+    let length = (width > height ? height :width)
     return Math.round(percent/100 *length );
   }
 

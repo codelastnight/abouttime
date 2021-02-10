@@ -9,7 +9,9 @@ html, body{
 
 }
 h1 {
+    margin: 0;
 }
+
 
 
 .main {
@@ -33,19 +35,21 @@ h1 {
     box-sizing: border-box;
     pointer-events: none;
     width:  100vw;
-    mix-blend-mode: exclusion;
+    //mix-blend-mode: exclusion;
 
     position: absolute;
     z-index: 2;
     display: grid;
-    padding: 8rem;
+    padding: 5rem;
     top: 0;
     left: 0;
     &__content {
         position: relative;
         max-width: 35rem;
-        color: white;
-
+        color: c.$blue;
+        background-color: white;
+        height: min-content;
+        width: fit-content;
     }
     
 }
@@ -67,8 +71,37 @@ footer {
     width:  100vw;
     position: absolute;
     top: 0;
-        border: 26px solid c.$purple;
+        border: 26px solid c.$red;
 }
+
+
+.beaker {
+    padding: 0.7rem;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    text-align: right;
+    height: 80%;
+    justify-content: flex-end;
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: 4rem;
+    place-items: flex-end;
+
+    &__lines {
+        background-color: c.$blue;
+        width: 16px;
+        height: 3px;
+        margin-left: 1rem;
+
+    }
+    &__text {
+        display: flex;
+        align-items: center;
+    }
+}
+
 
 @media only screen and (max-width: 600px) {
     body {
@@ -77,5 +110,9 @@ footer {
     .bgtext {
         padding: 4rem;
 
+    }
+
+    .beaker {
+        height: 70%;
     }
   }
