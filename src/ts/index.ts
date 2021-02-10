@@ -7,8 +7,10 @@
 import 'normalize.css';
 import '../scss/index.scss';
 
-import * as matterPhysics from './matter';
+import * as mp from './matter';
 import * as Matter from 'matter-js';
+
+
 
 let isHourChange = false,
     isMinuteChange = false,
@@ -22,6 +24,7 @@ interface state {
     hrsDif: number,
     mins: Matter.Body[]
     minsDif: number
+    minsMax: number
 }
 
 var state: state = {
@@ -29,21 +32,25 @@ var state: state = {
     mins: [],
     hrsDif: 0,
     minsDif: 0,
-    hrCurrent: 1
+    hrCurrent: 1,
+    minsMax: 0
 }
 
 
 function init() {
-    var data = matterPhysics.init(),
+    var data = mp.init(),
         Body = Matter.Body,
         duration = 200,
-        step = matterPhysics.height / duration,
+        step = mp.height / duration,
         world = data.engine.world;
         
-    var TopWall = Matter.Bodies.rectangle(matterPhysics.width/2, 0, matterPhysics.width, matterPhysics.border, { isStatic: true })
-    var BotWall = Matter.Bodies.rectangle(matterPhysics.width/2, matterPhysics.height, matterPhysics.width, matterPhysics.border, { isStatic: true })
+    var TopWall = Matter.Bodies.rectangle(mp.width/2, 0, mp.width, mp.border, { isStatic: true, render: mp.bordercolor })
+    var BotWall = Matter.Bodies.rectangle(mp.width/2, mp.height, mp.width, mp.border, { isStatic: true, render: mp.bordercolor })
+    
+    let area = (mp.width - mp.border*2) * (mp.height - mp.border*2) 
 
-
+    // how many smalls in an hour
+    state.minsMax = Math.round((area / (3*mp.rel(5)**2) )* 0.5)
 
     Matter.World.add(world, [
         //vertical walls
@@ -58,14 +65,14 @@ function init() {
         if (isHourChange) {
             
             // move top wall down
-            Body.setVelocity(TopWall, { x: matterPhysics.width/2, y: step*hourCounter - TopWall.position.y });
-            Body.setPosition(TopWall, { x: matterPhysics.width/2, y: step*hourCounter });
+            Body.setVelocity(TopWall, { x: mp.width/2, y: step*hourCounter - TopWall.position.y });
+            Body.setPosition(TopWall, { x: mp.width/2, y: step*hourCounter });
             
             // move bottom wall down
-            Body.setVelocity(BotWall, { x: matterPhysics.width/2, y: step*hourCounter - TopWall.position.y });
-            Body.setPosition(BotWall, { x: matterPhysics.width/2, y: step*hourCounter });
-            if (hourCounter > duration - ((matterPhysics.border / 2)/ step)) {
-                Body.setPosition(BotWall, { x: matterPhysics.width/2, y: - matterPhysics.border / 2});
+            Body.setVelocity(BotWall, { x: mp.width/2, y: step*hourCounter - TopWall.position.y });
+            Body.setPosition(BotWall, { x: mp.width/2, y: step*hourCounter });
+            if (hourCounter > duration - ((mp.border / 2)/ step)) {
+                Body.setPosition(BotWall, { x: mp.width/2, y: - mp.border / 2});
             }
             hourCounter += 1;
 
@@ -73,8 +80,12 @@ function init() {
             if (hourCounter > duration) {
                 isHourChange = false;
                 hourCounter = 0;
-                Body.setPosition(TopWall, { x: matterPhysics.width/2, y:0 })
-                Body.setPosition(BotWall, { x: matterPhysics.width/2, y:matterPhysics.height})
+                Body.setVelocity(TopWall, { x: 0, y: 0 });
+
+                Body.setPosition(TopWall, { x: mp.width/2, y:0 })
+                Body.setVelocity(BotWall, { x: 0, y: 0 });
+
+                Body.setPosition(BotWall, { x: mp.width/2, y:mp.height})
                 // garbage collection
                 state.hrs.forEach((hr) => {
                     Matter.World.remove(world, hr);
@@ -96,7 +107,7 @@ function init() {
 
         if (state.minsDif > 0) {
             if ( hourCounter == 0 || hourCounter >= duration ) {
-                var newMin = matterPhysics.createMin()
+                var newMin = mp.createMin()
                 Matter.World.add(world,newMin)
                 state.mins.push(newMin)
                 state.minsDif -= 1
@@ -111,7 +122,7 @@ function init() {
 
         // if hr bodies needed, spawn them, and make sure the spawn happens after the clearing animation
         if (state.hrCurrent - state.hrs.length > 0 && hourCounter == 0) {
-            var newHr = matterPhysics.createHr(state.hrCurrent)
+            var newHr = mp.createHr(state.hrCurrent)
             Matter.World.add(world,newHr)
             state.hrs.push(newHr)
             state.hrsDif -= 1
@@ -126,7 +137,7 @@ function init() {
 }
 
 
-let prevMins = 300;
+let prevSecs = 300;
 let prevHrs = 300;
 
 function triggerHrs(hrs:number) {
@@ -140,14 +151,14 @@ function triggerHrs(hrs:number) {
     state.hrsDif = hrs - state.hrs.length
     state.hrCurrent = hrs;
     isHourChange = true
-    console.log(state)
 }
 
-function triggerMins(mins: number) {
-    state.minsDif = mins - state.mins.length
+function triggerMins(mins: number, secs:number) {
+    let amount =   Math.round(((mins*60 + secs) / 3600) * state.minsMax)
+    state.minsDif = amount - state.mins.length
+    console.log(amount, state.minsDif)
     isMinuteChange = true;
-    prevMins = mins
-        console.log(state)
+    prevSecs = secs
 }
 
 (window as any).testrigger = function testrigger() {
@@ -161,15 +172,16 @@ function clock () {
     let date = new Date();
     let hrs = date.getHours();
     let mins = date.getMinutes();
+    let secs = date.getSeconds();
     let period = "AM"
-    // run every minute
-    if (prevMins !== mins ) {
-        triggerMins(mins)
+    // run every second
+    if (prevSecs !== secs ) {
+        triggerMins(mins, secs)
         
     }
 
     if (state.mins.length == 0) {
-        triggerMins(mins)
+        triggerMins(mins, secs)
 
     }
     // run every hour
@@ -198,7 +210,8 @@ var messages = [
     ""
 ]
 
-var i = setInterval(clock, 3000)
+var i = setInterval(clock, 500)
+
 function sleep(ms:number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

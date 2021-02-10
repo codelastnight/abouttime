@@ -1,4 +1,4 @@
-@use 'cssvariables';
+@use 'cssvariables' as c;
 
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Mega&display=swap');
 
@@ -17,9 +17,14 @@ h1 {
     width: 100vw;
     height: -webkit-fill-available;
 
-    background-color: #ffd1dc ;
-
+    background-color: c.$yellow ;
+    // animation-name: colors;
+    // animation-duration: 180s;
+    // animation-iteration-count: infinite;
 }
+
+
+
 .bgtext {
     height: 100vh;
 
@@ -28,7 +33,7 @@ h1 {
     box-sizing: border-box;
     pointer-events: none;
     width:  100vw;
-    mix-blend-mode: difference;
+    mix-blend-mode: exclusion;
 
     position: absolute;
     z-index: 2;
@@ -46,7 +51,7 @@ h1 {
 }
 
 footer {
-    padding: 1rem;
+    padding: 0.5rem;
     position: absolute;
     bottom: 0;
     right: 0;
@@ -62,7 +67,7 @@ footer {
     width:  100vw;
     position: absolute;
     top: 0;
-        border: 26px solid white;
+        border: 26px solid c.$purple;
 }
 
 @media only screen and (max-width: 600px) {

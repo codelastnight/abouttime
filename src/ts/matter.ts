@@ -7,15 +7,21 @@
 import * as Matter from 'matter-js';
 
 var colors = [
-    "#dbf7ff",
-    "#c8edff",
-    "#d2cfff",
-    "#ffd6eb",
-    "#f1c7ff"
+    "#fff200",
+    "#fff200",
+    "#ec1c24",
+    "#0ed145",
+    "#F038FF",
+     "#3f48cc",
+     "#70E4EF "
 ]
 
+export const bordercolor =   {
+    fillStyle: "#3f48cc",
+} 
+
 function getColor() {
-    return colors[Math.round(Matter.Common.random(1,5) - 1)]
+    return colors[Math.round(Matter.Common.random(0,(colors.length -1)))]
 }
 
 
@@ -41,20 +47,16 @@ export function createMin(){
     var y = Common.random(rel(10), rel(20))
     var sides = Math.round(Common.random(1, 8));
 
-    // triangles can be a little unstable, so avoid until fixed
-    //sides = (sides === 3) ? 4 : sides;
 
-    // round the edges of some bodies
     var chamfer = null;
-    // if (sides > 2 && Common.random() > 0.7) {
-    //     chamfer = {
-    //         radius: 10
-    //     };
-    // }
-    return Bodies.polygon(x, y, sides, Common.random(rel(2), rel(3)), { 
+
+    return Bodies.polygon(x, y, sides, rel(4), { 
         chamfer: chamfer ,
         render: {
             fillStyle: getColor(),
+            strokeStyle: "#3f48cc",
+            lineWidth: rel(1)
+
         } 
     });
 
@@ -68,24 +70,19 @@ export function createHr(time: number) {
     var x = Common.random(rel(20), rel(80))
     var y = rel(20)
 
+    var sides = Math.round(Common.random(1, 8));
 
-    var sides = Math.round( time);
 
-    // triangles can be a little unstable, so avoid until fixed
-    //sides = (sides === 3) ? 4 : sides;
 
-    // round the edges of some bodies
     var chamfer = null;
-    if (sides > 2 && Common.random() > 0.7) {
-        chamfer = {
-            radius: 10
-        };
-    }
 
     return Bodies.polygon(x, y, sides, Common.random(rel(10), rel(11)), { 
         chamfer: chamfer,  
          render: {
             fillStyle: getColor(),
+            strokeStyle: "#3f48cc",
+            lineWidth: rel(1)
+
         } 
     });
     
@@ -146,8 +143,8 @@ Runner.run(runner, engine);
 World.add(world, [
 
     //vertical walls
-    Bodies.rectangle(width, height/2, border, height, { isStatic: true }),
-    Bodies.rectangle(0, height/2, border, height, { isStatic: true })
+    Bodies.rectangle(width, height/2, border, height, { isStatic: true, render:bordercolor }),
+    Bodies.rectangle(0, height/2, border, height, { isStatic: true, render: bordercolor })
 ]);
 
 
@@ -174,32 +171,36 @@ render.mouse = mouse;
 //     min: { x: 0, y: 0 },
 //     max: { x: 800, y: 600 }
 // });
- // add gyro control
- var clamp = 90
- var scale = 45
- if (typeof window !== 'undefined') {
-    var updateGravity = function(event: DeviceOrientationEvent) {
-        var orientation = typeof window.orientation !== 'undefined' ? window.orientation : 0,
-            gravity = engine.world.gravity;
+//  // add gyro control
+//  var clamp = 90
+//  var scale = 45
+//  if (typeof window !== 'undefined') {
+//     var updateGravity = function(event: DeviceOrientationEvent) {
+//         var orientation = typeof window.orientation !== 'undefined' ? window.orientation : 0,
+//             gravity = engine.world.gravity;
         
-        if (orientation === 0) {
-            gravity.x = Common.clamp(event.gamma, -clamp, clamp) / scale;
-            gravity.y = Common.clamp(event.beta, -clamp, clamp) / scale;
-        } else if (orientation === 180) {
-            gravity.x = Common.clamp(event.gamma, -clamp, clamp) / scale;
-            gravity.y = Common.clamp(-event.beta, -clamp, clamp) / scale;
-        } else if (orientation === 90) {
-            gravity.x = Common.clamp(event.beta, -clamp, clamp) / scale;
-            gravity.y = Common.clamp(-event.gamma, -clamp, clamp) / scale;
-        } else if (orientation === -90) {
-            gravity.x = Common.clamp(-event.beta, -clamp, clamp) / scale;
-            gravity.y = Common.clamp(event.gamma, -clamp, clamp) / scale;
-        }
-    };
+//         if (orientation === 0) {
+//             gravity.x = Common.clamp(event.gamma, -clamp, clamp) / scale;
+//             gravity.y = Common.clamp(event.beta, -clamp, clamp) / scale;
+//         } else if (orientation === 180) {
+//             gravity.x = Common.clamp(event.gamma, -clamp, clamp) / scale;
+//             gravity.y = Common.clamp(-event.beta, -clamp, clamp) / scale;
+//         } else if (orientation === 90) {
+//             gravity.x = Common.clamp(event.beta, -clamp, clamp) / scale;
+//             gravity.y = Common.clamp(-event.gamma, -clamp, clamp) / scale;
+//         } else if (orientation === -90) {
+//             gravity.x = Common.clamp(-event.beta, -clamp, clamp) / scale;
+//             gravity.y = Common.clamp(event.gamma, -clamp, clamp) / scale;
+//         }
+//     };
 
-    window.addEventListener('deviceorientation', updateGravity);
-}
+    //window.addEventListener('deviceorientation', updateGravity);
+//}
+//engine.world.gravity.y = 2;
+
+//@ts-ignore
 mouseConstraint.mouse.element.removeEventListener("mousewheel", mouseConstraint.mouse.mousewheel);
+//@ts-ignore
 mouseConstraint.mouse.element.removeEventListener("DOMMouseScroll", mouseConstraint.mouse.mousewheel);
 // context for MatterTools.Demo
 return {
