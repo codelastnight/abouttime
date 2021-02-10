@@ -205,7 +205,7 @@ var messages = [
     "this is my clock",
     "clocks are devices that tell time",
     "the big shapes tell the hour",
-    "the little shapes fill up the remaining space as the minute passes",
+    "the little shapes fill up the remaining space as a % of the hour",
     "pretty visual right",
     "you can drag the shapes around btw",
     "well thats all i got",
