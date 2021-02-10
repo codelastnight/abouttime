@@ -76,7 +76,13 @@ export function createHr(time: number) {
         };
     }
 
-    return Bodies.polygon(x, y, sides, Common.random(relX(10), relX(11)), { chamfer: chamfer });
+    return Bodies.polygon(x, y, sides, Common.random(relX(10), relX(11)), { 
+        chamfer: chamfer,  
+         render: {
+            fillStyle: 'red',
+            strokeStyle: 'blue',
+            lineWidth: 3
+   } });
     
 }
 

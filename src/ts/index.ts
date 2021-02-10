@@ -162,8 +162,33 @@ function clock () {
 
 init()
 
+var messages = [
+    "hey",
+    "whats good dave (or johnathan idk who looks at this)",
+    "this is my clock",
+    "clocks are devices that tell time",
+    "the big shapes tell the hour",
+    "the little shapes fill up the remaining space as the minute passes",
+    "pretty visual right",
+    "you can drag the shapes around btw",
+    "well thats all i got",
+    "lol",
+    "~simon",
+    ""
+]
 
 var i = setInterval(clock, 3000)
+function sleep(ms:number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-//toggleHr()
+async function displayText() {
+    for (var i =0; i < messages.length; i++) {
+        document.getElementById("displaytext").innerText = messages[i];
+        await sleep(4000);
+    }
+}
+
+displayText()
+
 
