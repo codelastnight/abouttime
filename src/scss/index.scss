@@ -4,6 +4,7 @@
 
 body {
     font-family: 'Lexend Mega', sans-serif;
+    box-sizing: border-box;
 
 }
 h1 {
@@ -14,22 +15,53 @@ h1 {
     height: 100vh;
     width: 100vw;
     background-color: white;
+
 }
 .bgtext {
+    box-sizing: border-box;
     pointer-events: none;
     height: 100vh;
     width:  100vw;
+    mix-blend-mode: difference;
+
     position: absolute;
     z-index: 2;
-    mix-blend-mode: difference;
-    color: white;
     display: grid;
-    place-items: center;
+    padding: 8rem;
     top: 0;
     left: 0;
     &__content {
         position: relative;
         max-width: 35rem;
+        color: white;
+
     }
+    
 }
 
+footer {
+    padding: 1rem;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-align: right;
+}
+.border {
+    box-sizing: border-box;
+    pointer-events: none;
+    height: 100vh;
+    width:  100vw;
+    position: absolute;
+    top: 0;
+        border: 26px solid white;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+      font-size: 12px;
+    }
+    .bgtext {
+        padding: 4rem;
+
+    }
+  }

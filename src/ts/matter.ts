@@ -25,8 +25,8 @@ export function createMin(){
     var Common = Matter.Common,
         Bodies = Matter.Bodies
 
-    var x = Common.random(relX(10), relX(90))
-    var y = Common.random(relY(5), relY(10))
+    var x = Common.random(rel(10), rel(90))
+    var y = Common.random(rel(10), rel(20))
     var sides = Math.round(Common.random(1, 8));
 
     // triangles can be a little unstable, so avoid until fixed
@@ -39,7 +39,7 @@ export function createMin(){
     //         radius: 10
     //     };
     // }
-    return Bodies.polygon(x, y, sides, Common.random(relX(2), relX(3)), { chamfer: chamfer });
+    return Bodies.polygon(x, y, sides, Common.random(rel(2), rel(3)), { chamfer: chamfer });
 
     // switch (Math.round(Common.random(0, 2))) {
     // case 0:
@@ -59,8 +59,8 @@ export function createHr(time: number) {
     var Common = Matter.Common,
         Bodies = Matter.Bodies
 
-    var x = Common.random(relX(20), relX(80))
-    var y = Common.random(relY(5), relY(10))
+    var x = Common.random(rel(20), rel(80))
+    var y = rel(20)
 
 
     var sides = Math.round(Common.random(1, time));
@@ -76,7 +76,7 @@ export function createHr(time: number) {
         };
     }
 
-    return Bodies.polygon(x, y, sides, Common.random(relX(10), relX(11)), { 
+    return Bodies.polygon(x, y, sides, Common.random(rel(10), rel(11)), { 
         chamfer: chamfer,  
          render: {
             fillStyle: 'red',
@@ -208,10 +208,8 @@ return {
 }
 
 
-export function relX(percent: number) {
-    return Math.round(percent/100 * window.innerWidth);
+export function rel(percent: number) {
+    let length = (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth)
+    return Math.round(percent/100 *length );
   }
 
-export function relY(percent: number) {
-    return Math.round(percent/100 * window.innerHeight);
-}

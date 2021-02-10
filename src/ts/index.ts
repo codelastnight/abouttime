@@ -85,6 +85,7 @@ function init() {
                 // remove reference once done
                 state.hrs = []
                 state.mins = []
+                isMinuteChange = true;
             }
             
         }
@@ -109,12 +110,12 @@ function init() {
         }
 
         // if hr bodies needed, spawn them, and make sure the spawn happens after the clearing animation
-        if (state.hrsDif > 0 && hourCounter == 0) {
+        if (state.hrCurrent - state.hrs.length > 0 && hourCounter == 0) {
             var newHr = matterPhysics.createHr(state.hrCurrent)
             Matter.World.add(world,newHr)
             state.hrs.push(newHr)
             state.hrsDif -= 1
-        } else if(state.hrsDif < 0) {
+        } else if(state.hrCurrent - state.hrs.length < 0) {
             var toRemove = state.hrs.pop()
             Matter.World.remove(world, toRemove);
             state.hrsDif += 1
@@ -127,6 +128,35 @@ function init() {
 
 let prevMins = 300;
 let prevHrs = 300;
+
+function triggerHrs(hrs:number) {
+    console.log("hr")
+    prevHrs = hrs
+    if (hrs == 0) {
+        hrs = 12;
+      } else if (hrs > 12) {
+        hrs = hrs - 12;
+    }
+    state.hrsDif = hrs - state.hrs.length
+    state.hrCurrent = hrs;
+    isHourChange = true
+    console.log(state)
+}
+
+function triggerMins(mins: number) {
+    state.minsDif = mins - state.mins.length
+    isMinuteChange = true;
+    prevMins = mins
+        console.log(state)
+}
+
+(window as any).testrigger = function testrigger() {
+    isHourChange = true;
+
+    state.hrsDif = state.hrCurrent - state.hrs.length
+    console.log(state)
+}
+
 function clock () {
     let date = new Date();
     let hrs = date.getHours();
@@ -134,26 +164,17 @@ function clock () {
     let period = "AM"
     // run every minute
     if (prevMins !== mins ) {
-        state.minsDif = mins - state.mins.length
-        isMinuteChange = true;
-        prevMins = mins
-        console.log(state)
+        triggerMins(mins)
+        
     }
 
+    if (state.mins.length == 0) {
+        triggerMins(mins)
+
+    }
     // run every hour
     if (prevHrs !== hrs) {
-        console.log("hr")
-        prevHrs = hrs
-        if (hrs == 0) {
-            hrs = 12;
-          } else if (hrs >= 12) {
-            hrs = hrs - 12;
-            period = "PM"
-        }
-        state.hrsDif = hrs - state.hrs.length
-        state.hrCurrent = hrs;
-        isHourChange = true
-        console.log(state)
+        triggerHrs(hrs)
 
     }
     
