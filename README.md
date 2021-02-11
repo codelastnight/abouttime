@@ -1,7 +1,10 @@
 # abouttime
 
 school project
-i made this on typescript n sass using the matterjs library. bundled in webpack
+
+i made this on typescript n sass using the matterjs library. 
+
+bundled in webpack
 
 ## how 2 dev:
 
